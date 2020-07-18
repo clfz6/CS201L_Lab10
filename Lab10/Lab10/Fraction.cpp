@@ -36,6 +36,12 @@ void Fraction::reduce()
 	int gcd = getGCD(numerator, denominator);
 	numerator /= gcd;
 	denominator /= gcd;
+	
+	if (denominator < 0)
+	{
+		numerator *= -1;
+		denominator *= -1;
+	}
 }
 
 istream& operator>> (istream& in, Fraction& fract)
@@ -64,7 +70,7 @@ const Fraction Fraction::operator+(const Fraction rhs)
 }
 const Fraction Fraction::operator-(const Fraction rhs)
 {
-	Fraction subract((numerator * rhs.denominator + rhs.numerator * denominator)
+	Fraction subract((numerator * rhs.denominator - rhs.numerator * denominator)
 		, (denominator * rhs.denominator));
 	subract.reduce();
 
@@ -72,7 +78,7 @@ const Fraction Fraction::operator-(const Fraction rhs)
 }
 const Fraction Fraction::operator*(const Fraction rhs)
 {
-	Fraction multiply((numerator * rhs.denominator + rhs.numerator * denominator)
+	Fraction multiply((numerator * rhs.numerator)
 		, (denominator * rhs.denominator));
 	multiply.reduce();
 
@@ -80,8 +86,8 @@ const Fraction Fraction::operator*(const Fraction rhs)
 }
 const Fraction Fraction::operator/(const Fraction rhs)
 {
-	Fraction divide((numerator * rhs.denominator + rhs.numerator * denominator)
-		, (denominator * rhs.denominator));
+	Fraction divide((numerator * rhs.denominator)
+		, (denominator * rhs.numerator));
 	divide.reduce();
 
 	return divide;
@@ -89,8 +95,9 @@ const Fraction Fraction::operator/(const Fraction rhs)
 bool Fraction::operator==(const Fraction& rhs)
 {
 	bool equal;
-	
-
+	Fraction compare = rhs;
+	compare.reduce();
+	reduce();
 	if (numerator == rhs.numerator && denominator == rhs.denominator)
 	{
 		equal = true;
